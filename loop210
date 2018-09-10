@@ -1,0 +1,6 @@
+push 0
+push 1
+add
+print
+ifunq 10 1
+ret
