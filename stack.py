@@ -22,7 +22,7 @@ class Stack():
         ret = '['
         for x in self:
             ret+=str(x)+','
-        return ret+']'
+        return ret[:-1]+']'
     def __len__(self):
         return self.length
     def get_node(self,placement):
@@ -38,28 +38,41 @@ class Stack():
             self.base = self.node(value)
             self.top = self.base
         else:
-            new_node = self.node(value)
-            old_node = self.get_node(placement)
-            new_node.back = old_node
-            new_node.next = self.get_node(placement+1)
-            old_node.next = new_node
-            old_node = new_node
+            node = self.node(value)
+            back_node = self.get_node(placement)
+            next_node = back_node.next
+            node.back = back_node
+            node.next = next_node
+            if back_node is not None:
+                back_node.next = node
+            if next_node is not None:
+                next_node.back = node
+            if placement == 0: #if the node is put on top of the stack
+                self.top = node
+            elif placement == self.length: #if put at the base of the stack
+                self.base = node
         self.length+=1
     def pop(self,placement=0):
         '''remove the top value of the stack'''
         node = self.get_node(placement)
-        if node.back is None:
+        if self.length == 1:
             self.base = None
             self.top = None
         else:
-            node.back.next = self.node.next
-            node.next.back = self.node.back
+            if node.back is not None:
+                node.back.next = node.next
+            else:
+                self.base = node.next
+            if node.next is not None:
+                node.next.back = node.back
+            else:
+                self.top = node.back
         self.length-=1
     def add(self,placement1=0,placement2=1,placement=0):
         '''remove the top two values from the stack and push their addition together'''
-        a = self.get_node(placement1)
-        b = self.get_node(placement2)
-        self.push(a+b,0)
+        a = self.get_node(placement1).value
+        b = self.get_node(placement2).value
+        self.push(a+b,placement)
     def dup(self,old_placement,dup_placement):
         '''create a copy of the top of the stack and put it at the top of the stack'''
         self.push(self.get_node(old_placement),dup_placement)
