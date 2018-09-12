@@ -6,7 +6,8 @@ class Stack():
             self.next = None
     def __init__(self):
         self.base = None #top of the stack
-        self.bottom = None #bottom of the stack
+        self.top = None #bottom of the stack
+        self.length = 0
     def __iter__(self):
         self.current = self.base
         return self
@@ -18,35 +19,51 @@ class Stack():
             self.current = self.current.next
             return ret_value
     def __str__(self):
-        ret = ''
+        ret = '['
         for x in self:
-            ret+=str(x)+'\n'
-        return ret
-    def push(self,value):
+            ret+=str(x)+','
+        return ret+']'
+    def __len__(self):
+        return self.length
+    def get_node(self,placement):
+        node = self.top
+        for x in range(self.length):
+            if x == placement:
+                return node
+            node = node.back
+        return None
+    def push(self,value,placement=0):
         '''add a new value to the stack'''
         if self.base is None:
             self.base = self.node(value)
-            self.bottom = self.base
+            self.top = self.base
         else:
             new_node = self.node(value)
-            new_node.back = self.bottom
-            self.bottom.next = new_node
-            self.bottom = new_node
-    def pop(self):
+            old_node = self.get_node(placement)
+            new_node.back = old_node
+            new_node.next = self.get_node(placement+1)
+            old_node.next = new_node
+            old_node = new_node
+        self.length+=1
+    def pop(self,placement=0):
         '''remove the top value of the stack'''
-        if self.bottom.back is None:
+        node = self.get_node(placement)
+        if node.back is None:
             self.base = None
-            self.bottom = None
+            self.top = None
         else:
-            self.bottom.back.next = None
-            self.bottom = self.bottom.back
-    def add(self):
+            node.back.next = self.node.next
+            node.next.back = self.node.back
+        self.length-=1
+    def add(self,placement1=0,placement2=1,placement=0):
         '''remove the top two values from the stack and push their addition together'''
-        a = self.bottom.value
-        self.pop()
-        b = self.bottom.value
-        self.pop()
-        self.push(a+b)
-    def dup(self):
+        a = self.get_node(placement1)
+        b = self.get_node(placement2)
+        self.push(a+b,0)
+    def dup(self,old_placement,dup_placement):
         '''create a copy of the top of the stack and put it at the top of the stack'''
-        self.push(self.bottom.value)
+        self.push(self.get_node(old_placement),dup_placement)
+    def clear(self):
+        self.base = None
+        self.top = None
+        self.length = None

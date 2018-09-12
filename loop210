@@ -1,6 +1,8 @@
 push 0
 push 1
 add
+pop 1
+pop 2
 print
 ifunq 10 1
 ret

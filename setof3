@@ -1,6 +1,6 @@
 push 0
 jump loop210-0
-pop
 push 1
 add
+
 ifunq 3 1
