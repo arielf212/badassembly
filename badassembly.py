@@ -1,6 +1,5 @@
 import stack
 #import sys
-import time
 def run_file(file,main,line=0,jumpfrom=('main',0)):
     with open(file) as file_instructions:
         lines = file_instructions.read().split('\n')
@@ -99,8 +98,5 @@ if __name__ == '__main__':
     if len(sys.argv) == 0:
         print('This is an interpreter for the badassembly language. please input a file location to proceed')
     else:
-        print('before - ' + '0.0009975433349609375')
-        t = time.time()
         gst = stack.Stack()
         run_file(sys.argv[1],True)
-        print('after - ' + str(time.time()-t))
