@@ -1,3 +1,5 @@
+import exceptions
+
 class Stack():
     class node():
         def __init__(self,value):
@@ -31,7 +33,7 @@ class Stack():
             if x == placement:
                 return node
             node = node.back
-        return None
+        raise exceptions.OutofBoundsError(placement)
     def push(self,value,placement=0):
         '''add a new value to the stack'''
         if self.base is None:

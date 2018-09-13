@@ -1,10 +1,2 @@
-push 0
-push 5
 push 1
-push 0
-add 2 3 3
-pop 4
-add 0 1 1
-pop 0
-print 3
-ifunq 3 4
+push 2 4
