@@ -1,2 +1,46 @@
-push 1
-push 2 4
+rout mult $num1 $num2
+push $num1
+push 0
+loop $num2
+add
+pop 1
+end
+pop 1
+ret $0
+end
+
+rout dec
+push -1
+add
+pop 1
+pop 1
+end
+
+rout fib $count $old:1 $new:1
+ifeq $count 0
+print
+quit
+end
+push $count
+call dec
+push $old
+push $new
+add
+pop 2
+call fib $2 $1 $0
+end
+
+rout exponent $num1 $num2
+push $num2
+push -1
+add
+push $num1
+loop $1
+call mult $0 $num1
+end
+print
+end
+
+#test area
+call exponent 5 3
+call fib 6

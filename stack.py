@@ -3,9 +3,12 @@ import exceptions
 class Stack():
     class node():
         def __init__(self,value):
-            self.value = value
-            self.back =  None
-            self.next = None
+            if value.lstrip('-+').isdigit():
+                self.value = value
+                self.back =  None
+                self.next = None
+            else:
+                raise exceptions.NonIntegerIntoStack(value)
     def __init__(self):
         self.base = None #top of the stack
         self.top = None #bottom of the stack
@@ -29,8 +32,10 @@ class Stack():
         return self.length
     def get_node(self,placement):
         node = self.top
+        if not placement.lstrip('-+').isdigit():
+            raise exceptions.NonIntegerIntoStack(placement)
         for x in range(self.length):
-            if x == placement:
+            if x == int(placement):
                 return node
             node = node.back
         raise exceptions.OutofBoundsError(placement)
@@ -39,6 +44,11 @@ class Stack():
         if self.base is None:
             self.base = self.node(value)
             self.top = self.base
+        elif int(placement) == self.length:
+            node = self.node(value)
+            self.base.back = node
+            node.next = self.base
+            self.base = node
         else:
             node = self.node(value)
             back_node = self.get_node(placement)
@@ -49,9 +59,9 @@ class Stack():
                 back_node.next = node
             if next_node is not None:
                 next_node.back = node
-            if placement == 0: #if the node is put on top of the stack
+            if int(placement) == 0: #if the node is put on top of the stack
                 self.top = node
-            elif placement == self.length: #if put at the base of the stack
+            elif int(placement) == self.length: #if put at the base of the stack
                 self.base = node
         self.length+=1
     def pop(self,placement=0):
@@ -70,14 +80,15 @@ class Stack():
             else:
                 self.top = node.back
         self.length-=1
-    def add(self,placement1=0,placement2=1,placement=0):
+    def add(self, placement1=0, placement2=1, new_placement=0):
         '''remove the top two values from the stack and push their addition together'''
-        a = self.get_node(placement1).value
-        b = self.get_node(placement2).value
-        self.push(a+b,placement)
+        self.push(str(int(self.get_node(placement1).value)+int(self.get_node(placement2).value)), new_placement)
+    def div(self,placement1,placement2,new_placement):
+        '''take two numbers off the stack, divide them and push it on the stack'''
+        self.push(str(int(self.get_node(placement1).value)//int(self.get_node(placement2).value)), new_placement)
     def dup(self,old_placement,dup_placement):
         '''create a copy of the top of the stack and put it at the top of the stack'''
-        self.push(self.get_node(old_placement),dup_placement)
+        self.push(str(self.get_node(old_placement)),dup_placement)
     def clear(self):
         self.base = None
         self.top = None
